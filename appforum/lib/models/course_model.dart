@@ -1,11 +1,15 @@
+import 'dart:convert';
+
+CourseModel courseModel(String str) => CourseModel.fromJson(json.decode(str));
+
 class CourseModel {
   CourseModel({
-    required this.idCourse,
+    this.idCourse,
     required this.name,
     required this.description,
     this.createdAt,
   });
-  late final int idCourse;
+  late final int? idCourse;
   late final String name;
   late final String description;
   late final String? createdAt;
