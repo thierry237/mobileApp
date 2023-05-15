@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
-import '../models/course_model.dart';
-import '../services/course_service.dart';
 
-class AddCoursePage extends StatefulWidget {
+import '../models/post_model.dart';
+import '../services/post_service.dart';
+
+class AddPostPage extends StatefulWidget {
+  final int courseId;
+  const AddPostPage({Key? key, required this.courseId}) : super(key: key);
+
   @override
-  _AddCoursePageState createState() => _AddCoursePageState();
+  State<AddPostPage> createState() => _AddPostPageState();
 }
 
-class _AddCoursePageState extends State<AddCoursePage> {
-  CourseModel _course = CourseModel(name: '', description: '');
-  final TextEditingController _descriptionController = TextEditingController();
+class _AddPostPageState extends State<AddPostPage> {
+  final TextEditingController _messageController = TextEditingController();
+  late PostModel _post;
 
-  Future<void> _saveCourse(BuildContext context) async {
+  @override
+  void initState() {
+    super.initState();
+    _post = PostModel(
+      title: '',
+      message: '',
+      idCourse: 0,
+    );
+  }
+
+  Future<void> _savePost(BuildContext context) async {
     // Validate the course details
-    if (_course.name.isEmpty || _course.description.isEmpty) {
+    if (_post.title.isEmpty || _post.message.isEmpty) {
       // Show an error message indicating that the required fields are empty
       showDialog(
         context: context,
@@ -31,10 +45,15 @@ class _AddCoursePageState extends State<AddCoursePage> {
       return;
     }
 
+    print('save-post');
+    print(_post.title);
+    print(_post.message);
+    print(_post.idCourse);
+
     // Save the new course
     try {
-      final courseService = CourseService();
-      await courseService.addCourse(_course);
+      final postService = PostService();
+      await postService.addPost(_post);
 
       // Show a success dialog
       // ignore: use_build_context_synchronously
@@ -42,10 +61,11 @@ class _AddCoursePageState extends State<AddCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Success'),
-          content: const Text('New course added successfully.'),
+          content: const Text('New post added successfully.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/home'),
+              onPressed: () => Navigator.pushNamed(context, '/list-posts',
+                  arguments: widget.courseId),
               child: const Text('OK'),
             ),
           ],
@@ -57,7 +77,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Failed to add new course.'),
+          content: const Text('Failed to add new Post.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -73,7 +93,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ajouter un cours'),
+        title: const Text('Ajouter un Post'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -82,43 +102,46 @@ class _AddCoursePageState extends State<AddCoursePage> {
           children: [
             TextFormField(
               decoration: const InputDecoration(
-                labelText: 'Cours',
+                labelText: 'Post',
               ),
               onChanged: (value) {
                 setState(() {
-                  _course = CourseModel(
-                    name: value,
-                    description: _course.description,
+                  _post = PostModel(
+                    title: value,
+                    message: _post.message,
+                    idCourse: widget.courseId,
                   );
                 });
               },
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: _descriptionController,
+              controller: _messageController,
               decoration: const InputDecoration(
-                labelText: 'Description',
+                labelText: 'Question',
               ),
               minLines: 3,
               maxLines: 6,
               onChanged: (value) {
                 setState(() {
-                  _course = CourseModel(
-                    name: _course.name,
-                    description: value,
+                  _post = PostModel(
+                    title: _post.title,
+                    message: value,
+                    idCourse: widget.courseId,
                   );
                 });
               },
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => _saveCourse(context),
+              onPressed: () => _savePost(context),
               child: const Text('Enregistrer'),
             ),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/home');
+                Navigator.pushNamed(context, '/list-posts',
+                    arguments: widget.courseId);
               },
               child: const Text('Annuler'),
             ),

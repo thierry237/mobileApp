@@ -3,18 +3,18 @@ import 'package:appforum/services/shared_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../config.dart';
-import '../models/course_model.dart';
+import '../models/comment_model.dart';
 
-class CourseService {
+class CommentService {
   final String baseUrl = Config.apiUrl;
 
-  CourseService();
+  CommentService();
 
 // liste des cours
-  Future<List<CourseModel>> getCourses() async {
+  Future<List<CommentModel>> getComments(int postId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
-      throw Exception('courses not found');
+      throw Exception('Posts not found');
     }
 
     Map<String, String> requestHeaders = {
@@ -22,26 +22,26 @@ class CourseService {
       'Authorization': 'Bearer ${loginDetails.token}'
     };
 
-    var url = Uri.http(Config.apiUrl, Config.listCourse);
+    var url = Uri.http(
+        Config.apiUrl, Config.postAPI + '/$postId' + Config.listComment);
 
     var response = await http.get(
       url,
       headers: requestHeaders,
     );
-
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      final courses = (jsonResponse as List<dynamic>)
-          .map((course) => CourseModel.fromJson(course))
+      final comments = (jsonResponse as List<dynamic>)
+          .map((comment) => CommentModel.fromJson(comment))
           .toList();
-      return courses;
+      return comments;
     } else {
-      throw Exception('Failed to load courses, login');
+      throw Exception('Failed to load Post, login');
     }
   }
 
 //delete course
-  Future<void> deleteCourse(int courseId) async {
+  Future<void> deleteComment(int commentId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
       throw Exception('course doesnt exist');
@@ -52,7 +52,7 @@ class CourseService {
       'Authorization': 'Bearer ${loginDetails.token}'
     };
 
-    var url = Uri.http(Config.apiUrl, '${Config.courseAPI}/$courseId');
+    var url = Uri.http(Config.apiUrl, '${Config.commentAPI}/$commentId');
 
     var response = await http.delete(
       url,
@@ -60,12 +60,12 @@ class CourseService {
     );
     if (response.statusCode == 200) {
     } else {
-      throw Exception('Failed to delete course');
+      throw Exception('Failed to delete post');
     }
   }
 
 //update course
-  Future<void> editCourse(int courseId, CourseModel model) async {
+  Future<void> editComment(int commentId, CommentModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
       throw Exception('User not logged in');
@@ -76,25 +76,24 @@ class CourseService {
       'Authorization': 'Bearer ${loginDetails.token}'
     };
 
-    var url = Uri.http(Config.apiUrl, '${Config.courseAPI}/$courseId');
+    var url = Uri.http(Config.apiUrl, '${Config.commentAPI}/$commentId');
 
     var response = await http.put(
       url,
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
-    print(jsonEncode(model.toJson()));
     if (response.statusCode == 200) {
     } else {
-      throw Exception('Failed to edit course');
+      throw Exception('Failed to edit post');
     }
   }
 
 //add Course
-  Future<String> addCourse(CourseModel model) async {
+  Future<String> addComment(CommentModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
-      throw Exception('User not logged in');
+      throw Exception('not authorized');
     }
 
     Map<String, String> requestHeaders = {
@@ -102,18 +101,18 @@ class CourseService {
       'Authorization': 'Bearer ${loginDetails.token}'
     };
 
-    var url = Uri.http(Config.apiUrl, Config.courseAPI);
-
+    var url = Uri.http(Config.apiUrl, Config.commentAPI);
     var response = await http.post(
       url,
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
+    print(response.body);
     return response.body;
   }
 
 // get course
-  Future<CourseModel> getCourseDetails(int courseId) async {
+  Future<CommentModel> getCommentDetails(int commentId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
       throw Exception('User not logged in');
@@ -124,12 +123,12 @@ class CourseService {
       'Authorization': 'Bearer ${loginDetails.token}'
     };
 
-    var url = Uri.http(Config.apiUrl, '${Config.courseAPI}/$courseId');
+    var url = Uri.http(Config.apiUrl, '${Config.commentAPI}/$commentId');
 
     var response = await http.get(
       url,
       headers: requestHeaders,
     );
-    return courseModel(response.body);
+    return commentModel(response.body);
   }
 }

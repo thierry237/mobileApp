@@ -10,7 +10,7 @@ class UserService {
 
   UserService();
 
-// liste des cours
+// liste des users
   Future<List<UserModel>> getUsers() async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -38,5 +38,26 @@ class UserService {
     } else {
       throw Exception('Failed to load users');
     }
+  }
+
+  // get course
+  Future<UserModel> getUserDetails(int userId) async {
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('User not logged in');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(Config.apiUrl, '${Config.userAPI}/$userId');
+
+    var response = await http.get(
+      url,
+      headers: requestHeaders,
+    );
+    return userModel(response.body);
   }
 }

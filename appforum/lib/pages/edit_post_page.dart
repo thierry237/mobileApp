@@ -1,38 +1,40 @@
 import 'package:flutter/material.dart';
-import '../models/course_model.dart';
-import '../services/course_service.dart';
+import '../models/post_model.dart';
+import '../services/post_service.dart';
 
-class EditCoursePage extends StatefulWidget {
-  final int courseId;
+class EditPostPage extends StatefulWidget {
+  final int postId;
 
-  const EditCoursePage({Key? key, required this.courseId}) : super(key: key);
+  const EditPostPage({Key? key, required this.postId}) : super(key: key);
 
   @override
-  _EditCoursePageState createState() => _EditCoursePageState();
+  _EditPostPageState createState() => _EditPostPageState();
 }
 
-class _EditCoursePageState extends State<EditCoursePage> {
-  CourseModel _course = CourseModel(name: '', description: '');
-  final TextEditingController _descriptionController = TextEditingController();
+class _EditPostPageState extends State<EditPostPage> {
+  PostModel _post = PostModel(title: '', message: '');
+  final TextEditingController _messageController = TextEditingController();
   bool _isLoading = false;
+  int courseId = 0;
 
   @override
   void initState() {
     super.initState();
-    _fetchCourseDetails();
+    _fetchPostDetails();
   }
 
-  Future<void> _fetchCourseDetails() async {
+  Future<void> _fetchPostDetails() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final courseService = CourseService();
-      final course = await courseService.getCourseDetails(widget.courseId);
+      final postService = PostService();
+      final post = await postService.getPostDetails(widget.postId);
       setState(() {
-        _course = course;
-        _descriptionController.text = _course.description;
+        _post = post;
+        courseId = _post.idCourse!;
+        _messageController.text = _post.message;
         _isLoading = false;
       });
     } catch (e) {
@@ -43,9 +45,9 @@ class _EditCoursePageState extends State<EditCoursePage> {
     }
   }
 
-  Future<void> _saveCourseChanges() async {
+  Future<void> _savePostChanges(int idCourse) async {
     // Validate the course details
-    if (_course.name.isEmpty || _course.description.isEmpty) {
+    if (_post.title.isEmpty || _post.message.isEmpty) {
       // Show an error message indicating that the required fields are empty
       showDialog(
         context: context,
@@ -65,8 +67,8 @@ class _EditCoursePageState extends State<EditCoursePage> {
 
     // Save the changes
     try {
-      final courseService = CourseService();
-      await courseService.editCourse(widget.courseId, _course);
+      final postService = PostService();
+      await postService.editPost(widget.postId, _post);
 
       // Show a success dialog
       // ignore: use_build_context_synchronously
@@ -74,10 +76,11 @@ class _EditCoursePageState extends State<EditCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Success'),
-          content: const Text('Course changes saved successfully.'),
+          content: const Text('Post changes saved successfully.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/home'),
+              onPressed: () => Navigator.pushNamed(context, '/list-posts',
+                  arguments: idCourse),
               child: const Text('OK'),
             ),
           ],
@@ -89,7 +92,7 @@ class _EditCoursePageState extends State<EditCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Failed to save course changes.'),
+          content: const Text('Failed to save Post changes.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -105,7 +108,7 @@ class _EditCoursePageState extends State<EditCoursePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modifier Cours'),
+        title: const Text('Modifier Post'),
       ),
       body: _isLoading
           ? const Center(
@@ -117,42 +120,41 @@ class _EditCoursePageState extends State<EditCoursePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   TextFormField(
-                    initialValue: _course.name,
+                    initialValue: _post.title,
                     decoration: const InputDecoration(
-                      labelText: 'Cours',
+                      labelText: 'Post',
                     ),
                     onChanged: (value) {
                       setState(() {
-                        _course = CourseModel(
-                            name: value, description: _course.description);
+                        _post = PostModel(title: value, message: _post.message);
                       });
                     },
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    controller: _descriptionController,
+                    controller: _messageController,
                     decoration: const InputDecoration(
-                      labelText: 'Description',
+                      labelText: 'Question:',
                     ),
                     minLines: 3,
                     maxLines: 6,
                     onChanged: (value) {
                       setState(() {
-                        _course =
-                            CourseModel(name: _course.name, description: value);
+                        _post = PostModel(title: _post.title, message: value);
                       });
                     },
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: _saveCourseChanges,
+                    onPressed: () {
+                      _savePostChanges(courseId);
+                    },
                     child: const Text('Valider'),
                   ),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
-                          context, '/home'); // Redirige vers la page d'accueil
+                      Navigator.pop(context);
                     },
                     child: const Text('Annuler'),
                   ),

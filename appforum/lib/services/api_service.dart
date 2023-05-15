@@ -43,6 +43,7 @@ class APIService {
     return registerResponseModel(response.body);
   }
 
+//get user connected
   static Future<String> getUser() async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {

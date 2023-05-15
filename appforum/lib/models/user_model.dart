@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+UserModel userModel(String str) => UserModel.fromJson(json.decode(str));
+
 class UserModel {
   UserModel({
     required this.idUser,

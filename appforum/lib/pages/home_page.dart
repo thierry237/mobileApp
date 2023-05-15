@@ -45,7 +45,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_userProfile),
+        title: Text(
+          'Bienvenue $_userProfile',
+          style: const TextStyle(
+              color: Colors.yellow, fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -201,8 +205,35 @@ class _CourseListPageState extends State<CourseListPage> {
                             );
                           },
                         ),
-                        title: Text(course.name),
-                        subtitle: Text('Ajouté le ${course.createdAt}'),
+                        title: GestureDetector(
+                          onTap: () {
+                            // Action à effectuer lors du clic sur le lien
+                            // Par exemple, naviguer vers une page détaillée du cours
+                            Navigator.pushNamed(context, '/list-posts',
+                                arguments: course.idCourse);
+                          },
+                          child: Text(
+                            course.name,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Nombre de posts : ${course.posts?.length}',
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Ajouté le ${course.createdAt}',
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          ],
+                        ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
