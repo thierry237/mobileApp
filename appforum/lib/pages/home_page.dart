@@ -241,6 +241,7 @@ class _CourseListPageState extends State<CourseListPage> {
                               IconButton(
                                 icon: const Icon(
                                   Icons.edit,
+                                  color: Colors.blue,
                                 ),
                                 onPressed: () {
                                   Navigator.popAndPushNamed(
@@ -307,6 +308,9 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   bool _isAdmin = false;
+  late int _userId;
+  bool _isIconBlue = false;
+  late UserModel userProfile;
 
   @override
   void initState() {
@@ -318,8 +322,19 @@ class _UserPageState extends State<UserPage> {
     LoginResponseModel? user = await SharedService.loginDetails();
     if (user != null) {
       setState(() {
+        _userId = user.idUser;
         _isAdmin = user.isAdmin;
       });
+    }
+  }
+
+  void _deleteUserAndRefresh(int userId) async {
+    try {
+      final userService = UserService();
+      await userService.deleteUser(userId);
+      setState(() {}); // Actualiser l'interface utilisateur
+    } catch (e) {
+      // Handle error
     }
   }
 
@@ -361,21 +376,61 @@ class _UserPageState extends State<UserPage> {
                       children: [
                         if (_isAdmin)
                           IconButton(
+                            icon: Icon(Icons.person_2,
+                                color: user.isAdmin! ? Colors.blue : null),
+                            onPressed: () async {
+                              final UserModel user1 = await UserService()
+                                  .getUserDetails(user.idUser!);
+                              final UserModel updatedUser = UserModel(
+                                idUser: user1.idUser,
+                                lastname: user1.lastname,
+                                firstname: user1.firstname,
+                                username: user1.username,
+                                email: user1.email,
+                                password: user1.password,
+                                isAdmin: !user1.isAdmin!,
+                              );
+
+                              await UserService()
+                                  .editUserAdmin(user.idUser!, updatedUser);
+
+                              setState(() {
+                                _isIconBlue = !_isIconBlue;
+                              });
+                            },
+                          ),
+                        if (_isAdmin || _userId == user.idUser)
+                          IconButton(
                             icon: const Icon(
                               Icons.delete,
                               color: Colors.red,
                             ),
                             onPressed: () {
-                              // Action de suppression de l'utilisateur
-                              // _deleteUser(user);
-                            },
-                          ),
-                        if (_isAdmin)
-                          IconButton(
-                            icon: const Icon(Icons.person_add),
-                            onPressed: () {
-                              // Action d'ajout en tant qu'administrateur
-                              // _makeAdmin(user);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmation'),
+                                    content: const Text(
+                                        'Êtes-vous sûr de vouloir supprimer ?'),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('Annuler'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Supprimer'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          _deleteUserAndRefresh(user.idUser!);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                       ],

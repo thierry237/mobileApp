@@ -191,7 +191,7 @@ class _ListPostsPageState extends State<ListPostsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Créé le ${post.createdAt ?? 'N/A'}',
+                          'Posté le ${post.createdAt ?? 'N/A'}',
                           style: const TextStyle(fontSize: 10),
                         ),
                         Text(
@@ -212,6 +212,7 @@ class _ListPostsPageState extends State<ListPostsPage> {
                           IconButton(
                             icon: const Icon(
                               Icons.edit,
+                              color: Colors.blue,
                             ),
                             onPressed: () {
                               Navigator.pushNamed(

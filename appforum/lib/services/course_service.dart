@@ -83,7 +83,6 @@ class CourseService {
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
-    print(jsonEncode(model.toJson()));
     if (response.statusCode == 200) {
     } else {
       throw Exception('Failed to edit course');

@@ -60,4 +60,76 @@ class UserService {
     );
     return userModel(response.body);
   }
+
+  Future<void> editUser(int userId, UserModel model) async {
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('User not logged in');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(Config.apiUrl, '${Config.userAPI}/$userId');
+
+    var response = await http.put(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode(model.toJson()),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to edit user');
+    }
+  }
+
+  Future<void> editUserAdmin(int userId, UserModel model) async {
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('User not logged in');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(Config.apiUrl, '${Config.userAPI}/admin/$userId');
+
+    var response = await http.put(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode(model.toJson()),
+    );
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to edit user');
+    }
+  }
+
+  Future<void> deleteUser(int userId) async {
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('course doesnt exist');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(Config.apiUrl, '${Config.userAPI}/$userId');
+
+    var response = await http.delete(
+      url,
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to delete user');
+    }
+  }
 }

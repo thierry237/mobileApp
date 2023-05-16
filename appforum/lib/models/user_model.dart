@@ -4,21 +4,23 @@ UserModel userModel(String str) => UserModel.fromJson(json.decode(str));
 
 class UserModel {
   UserModel({
-    required this.idUser,
-    required this.lastname,
-    required this.firstname,
-    required this.username,
-    required this.email,
-    required this.password,
-    required this.createdAt,
+    this.idUser,
+    this.lastname,
+    this.firstname,
+    this.username,
+    this.email,
+    this.password,
+    this.createdAt,
+    this.isAdmin,
   });
-  late final int idUser;
-  late final String lastname;
-  late final String firstname;
-  late final String username;
-  late final String email;
-  late final String password;
-  late final String createdAt;
+  late final int? idUser;
+  late final String? lastname;
+  late final String? firstname;
+  late final String? username;
+  late final String? email;
+  late final String? password;
+  late final String? createdAt;
+  late final bool? isAdmin;
 
   UserModel.fromJson(Map<String, dynamic> json) {
     idUser = json['idUser'];
@@ -28,6 +30,7 @@ class UserModel {
     email = json['email'];
     password = json['password'];
     createdAt = json['createdAt'];
+    isAdmin = json['isAdmin'];
   }
 
   Map<String, dynamic> toJson() {
@@ -39,6 +42,7 @@ class UserModel {
     data['email'] = email;
     data['password'] = password;
     data['createdAt'] = createdAt;
+    data['isAdmin'] = isAdmin;
     return data;
   }
 }

@@ -1,7 +1,11 @@
+import 'package:appforum/models/post_model.dart';
 import 'package:flutter/material.dart';
 
 import '../models/comment_model.dart';
+import '../models/login_response_model.dart';
 import '../services/comment_service.dart';
+import '../services/post_service.dart';
+import '../services/shared_service.dart';
 
 class ListCommentsPage extends StatefulWidget {
   final int postId;
@@ -17,13 +21,28 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
   TextEditingController commentController = TextEditingController();
   late bool isEdited;
   late int editedCommentIndex;
+  int _userId = 0;
+  bool _isAdmin = false;
+  PostModel _post = PostModel(title: '', message: '');
 
   @override
   void initState() {
     super.initState();
     fetchComments();
+    _getUserProfile();
+    _fetchPostDetails();
     isEdited = false;
     editedCommentIndex = -1;
+  }
+
+  Future<void> _getUserProfile() async {
+    LoginResponseModel? user = await SharedService.loginDetails();
+    if (user != null) {
+      setState(() {
+        _userId = user.idUser;
+        _isAdmin = user.isAdmin;
+      });
+    }
   }
 
   Future<void> fetchComments() async {
@@ -42,8 +61,6 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
     if (commentController.text.isEmpty) {
       return;
     }
-
-    print(widget.postId);
 
     final newComment =
         CommentModel(comment: commentController.text, idPost: widget.postId);
@@ -99,11 +116,23 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
     }
   }
 
+  Future<void> _fetchPostDetails() async {
+    try {
+      final postService = PostService();
+      final post = await postService.getPostDetails(widget.postId);
+      setState(() {
+        _post = post;
+      });
+    } catch (e) {
+      // Handle error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Liste des commentaires'),
+        title: Text(_post.title),
       ),
       body: Column(
         children: [
@@ -144,49 +173,54 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            setState(() {
-                              isEdited = true;
-                              editedCommentIndex = index;
-                              commentController.text = comment.comment;
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
+                        if (_userId == comment.idUser)
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isEdited = true;
+                                editedCommentIndex = index;
+                                commentController.text = comment.comment;
+                              });
+                            },
                           ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Confirmation'),
-                                  content: const Text(
-                                      'Êtes-vous sûr de vouloir supprimer ce commentaire ?'),
-                                  actions: [
-                                    TextButton(
-                                      child: const Text('Annuler'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: const Text('Supprimer'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        deleteComment(comment.idComment!);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        ),
+                        if (_isAdmin || _userId == comment.idUser)
+                          IconButton(
+                            icon: const Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmation'),
+                                    content: const Text(
+                                        'Êtes-vous sûr de vouloir supprimer ce commentaire ?'),
+                                    actions: [
+                                      TextButton(
+                                        child: const Text('Annuler'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: const Text('Supprimer'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          deleteComment(comment.idComment!);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),
