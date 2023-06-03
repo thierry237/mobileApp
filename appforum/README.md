@@ -1,6 +1,8 @@
 # appforum
+forum d'aide aux étudiants
 
-A new Flutter project.
+Conception d'un forum pour étudiants afin d'échanger au sujet sur les 
+différents cours présents.
 
 ## Getting Started
 
