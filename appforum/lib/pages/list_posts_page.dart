@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import '../models/comment_model.dart';
 import '../models/course_model.dart';
 import '../models/login_response_model.dart';
 import '../models/post_model.dart';
 import '../models/user_model.dart';
+import '../services/comment_service.dart';
 import '../services/course_service.dart';
 import '../services/post_service.dart';
 import '../services/shared_service.dart';
+import '../services/user_service.dart';
 
 class ListPostsPage extends StatefulWidget {
   final int courseId;
@@ -85,7 +88,35 @@ class _ListPostsPageState extends State<ListPostsPage> {
       await postService.deletePost(postId);
       _fetchPosts();
     } catch (e) {
-      // Handle error
+      print(e);
+    }
+  }
+
+  Future<String?> getUserById(int? idUser) async {
+    try {
+      final userService = UserService();
+      UserModel? user = await userService.getUserById(idUser);
+
+      if (user != null) {
+        String? username = user.username;
+        return username;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  Future<int> getCommentListLength(int postId) async {
+    try {
+      List<CommentModel> comments =
+          await CommentService().getCommentsForPost(postId);
+      return comments.length;
+    } catch (e) {
+      print('Erreur lors de la récupération de la liste des commentaires : $e');
+      return 0;
     }
   }
 
@@ -174,8 +205,6 @@ class _ListPostsPageState extends State<ListPostsPage> {
                     ),
                     title: GestureDetector(
                       onTap: () {
-                        // Action à effectuer lors du clic sur le lien
-                        // Par exemple, naviguer vers une page détaillée du cours
                         Navigator.pushNamed(context, '/list-comments',
                             arguments: post.idPost);
                       },
@@ -194,14 +223,50 @@ class _ListPostsPageState extends State<ListPostsPage> {
                           'Posté le ${post.createdAt ?? 'N/A'}',
                           style: const TextStyle(fontSize: 10),
                         ),
-                        Text(
-                          'Par ${post.createdAt ?? 'N/A'}',
-                          style: const TextStyle(fontSize: 10),
+                        FutureBuilder<String?>(
+                          future: getUserById(post.idUser),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              String username = snapshot.data!;
+                              return Text(
+                                'Par $username',
+                                style: const TextStyle(fontSize: 10),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text(
+                                'Erreur lors de la récupération de l\'utilisateur',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            } else {
+                              return const Text(
+                                'Chargement de l\'utilisateur...',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            }
+                          },
                         ),
-                        Text(
-                          'Nombre de commentaires : ${post.idUser}',
-                          style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold),
+                        FutureBuilder<int>(
+                          future: getCommentListLength(post.idPost!),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              int? numberOfComments = snapshot.data;
+                              return Text(
+                                'Nombre de commentaire(s): $numberOfComments',
+                                style: const TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.bold),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text(
+                                'Erreur lors de la récupération des commentaires',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            } else {
+                              return const Text(
+                                'Chargement des commentaires',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),

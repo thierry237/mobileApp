@@ -48,12 +48,11 @@ class _EditPostPageState extends State<EditPostPage> {
   Future<void> _savePostChanges(int idCourse) async {
     // Validate the course details
     if (_post.title.isEmpty || _post.message.isEmpty) {
-      // Show an error message indicating that the required fields are empty
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Please fill in all the required fields.'),
+          content: const Text('Veuillez remplir tous les champs obligatoires'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -76,7 +75,7 @@ class _EditPostPageState extends State<EditPostPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Success'),
-          content: const Text('Post changes saved successfully.'),
+          content: const Text('Post modifié'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/list-posts',
@@ -92,7 +91,7 @@ class _EditPostPageState extends State<EditPostPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Failed to save Post changes.'),
+          content: const Text('Impossible de modifier le post.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

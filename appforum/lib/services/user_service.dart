@@ -79,7 +79,6 @@ class UserService {
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
-    print(response.body);
     if (response.statusCode == 200) {
     } else {
       throw Exception('Failed to edit user');
@@ -130,6 +129,35 @@ class UserService {
     if (response.statusCode == 200) {
     } else {
       throw Exception('Failed to delete user');
+    }
+  }
+
+  Future<UserModel?> getUserById(int? userId) async {
+    if (userId == null) {
+      return null;
+    }
+
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('User not logged in');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(Config.apiUrl, '${Config.userAPI}/$userId');
+
+    var response = await http.get(
+      url,
+      headers: requestHeaders,
+    );
+
+    if (response.statusCode == 200) {
+      return userModel(response.body);
+    } else {
+      return null;
     }
   }
 }

@@ -51,7 +51,29 @@ class _EditCoursePageState extends State<EditCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Please fill in all the required fields.'),
+          content: const Text('Veuillez remplir tous les champs obligatoires'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Check if the course already exists
+    final courseService = CourseService();
+    bool courseExists = await courseService.checkCourseExists(_course);
+
+    if (courseExists) {
+      // Show an error message indicating that the course already exists
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Le cours existe déjà.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -65,16 +87,14 @@ class _EditCoursePageState extends State<EditCoursePage> {
 
     // Save the changes
     try {
-      final courseService = CourseService();
       await courseService.editCourse(widget.courseId, _course);
 
       // Show a success dialog
-      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Success'),
-          content: const Text('Course changes saved successfully.'),
+          content: const Text('Cours modifié avec succès.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/home'),

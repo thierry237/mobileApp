@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../models/comment_model.dart';
 import '../models/login_response_model.dart';
+import '../models/user_model.dart';
 import '../services/comment_service.dart';
 import '../services/post_service.dart';
 import '../services/shared_service.dart';
+import '../services/user_service.dart';
 
 class ListCommentsPage extends StatefulWidget {
   final int postId;
@@ -53,7 +55,24 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
       });
     } catch (error) {
       print('Failed to fetch comments: $error');
-      // Gérer l'erreur de récupération des commentaires ici
+    }
+  }
+
+  Future<String?> getUserById(int? idUser) async {
+    try {
+      final userService = UserService();
+      UserModel? user = await userService.getUserById(idUser);
+
+      if (user != null) {
+        String? username = user.username;
+        return username;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      // Gérer l'erreur
+      print('Error: $e');
+      return null;
     }
   }
 
@@ -154,16 +173,36 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Ajouté par: ${comment.idUser}',
-                          style: const TextStyle(
-                            fontStyle: FontStyle.italic,
-                            color: Colors.grey,
-                          ),
+                        FutureBuilder<String?>(
+                          future: getUserById(comment.idUser),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              String username = snapshot.data!;
+                              return Text(
+                                'Ajouté par $username',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.grey,
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              return const Text(
+                                'Erreur lors de la récupération de l\'utilisateur',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            } else {
+                              return const Text(
+                                'Chargement de l\'utilisateur...',
+                                style: TextStyle(fontSize: 10),
+                              );
+                            }
+                          },
                         ),
                         Text(
                           'Date d\'ajout: ${comment.createdAt}',
                           style: const TextStyle(
+                            fontSize: 10,
                             fontStyle: FontStyle.italic,
                             color: Colors.grey,
                           ),

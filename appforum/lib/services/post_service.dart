@@ -10,7 +10,7 @@ class PostService {
 
   PostService();
 
-// liste des cours
+// liste des posts
   Future<List<PostModel>> getPosts(int courseId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -40,7 +40,7 @@ class PostService {
     }
   }
 
-//delete course
+//delete post
   Future<void> deletePost(int postId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -64,7 +64,7 @@ class PostService {
     }
   }
 
-//update course
+//update post
   Future<void> editPost(int postId, PostModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -89,7 +89,7 @@ class PostService {
     }
   }
 
-//add Course
+//add post
   Future<String> addPost(PostModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -111,7 +111,7 @@ class PostService {
     return response.body;
   }
 
-// get course
+// get post
   Future<PostModel> getPostDetails(int postId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {

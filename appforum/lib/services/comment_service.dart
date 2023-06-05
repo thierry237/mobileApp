@@ -10,7 +10,7 @@ class CommentService {
 
   CommentService();
 
-// liste des cours
+// liste des commentaires
   Future<List<CommentModel>> getComments(int postId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -40,7 +40,7 @@ class CommentService {
     }
   }
 
-//delete course
+//delete comment
   Future<void> deleteComment(int commentId) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -64,7 +64,7 @@ class CommentService {
     }
   }
 
-//update course
+//update comment
   Future<void> editComment(int commentId, CommentModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -89,7 +89,7 @@ class CommentService {
     }
   }
 
-//add Course
+//add Comment
   Future<String> addComment(CommentModel model) async {
     var loginDetails = await SharedService.loginDetails();
     if (loginDetails == null) {
@@ -107,7 +107,6 @@ class CommentService {
       headers: requestHeaders,
       body: jsonEncode(model.toJson()),
     );
-    print(response.body);
     return response.body;
   }
 
@@ -130,5 +129,34 @@ class CommentService {
       headers: requestHeaders,
     );
     return commentModel(response.body);
+  }
+
+  Future<List<CommentModel>> getCommentsForPost(int postId) async {
+    var loginDetails = await SharedService.loginDetails();
+    if (loginDetails == null) {
+      throw Exception('Comments not found');
+    }
+
+    Map<String, String> requestHeaders = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${loginDetails.token}'
+    };
+
+    var url = Uri.http(
+        Config.apiUrl, Config.postAPI + '/$postId' + Config.listComment);
+
+    var response = await http.get(
+      url,
+      headers: requestHeaders,
+    );
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      final comments = (jsonResponse as List<dynamic>)
+          .map((comment) => CommentModel.fromJson(comment))
+          .toList();
+      return comments;
+    } else {
+      throw Exception('Failed to load comments');
+    }
   }
 }

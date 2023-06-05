@@ -19,7 +19,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Please fill in all the required fields.'),
+          content: const Text('Veuillez remplir tous les champs obligatoires'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -31,9 +31,30 @@ class _AddCoursePageState extends State<AddCoursePage> {
       return;
     }
 
-    // Save the new course
+    // Check if the course already exists
     try {
       final courseService = CourseService();
+      bool courseExists = await courseService.checkCourseExists(_course);
+
+      if (courseExists) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Message'),
+            content: const Text('Le cours existe déjà.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      // Save the new course
       await courseService.addCourse(_course);
 
       // Show a success dialog
@@ -42,7 +63,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Success'),
-          content: const Text('New course added successfully.'),
+          content: const Text('Cours ajouté avec succès.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -57,7 +78,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Failed to add new course.'),
+          content: const Text('Impossible d\'ajouter le cours'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

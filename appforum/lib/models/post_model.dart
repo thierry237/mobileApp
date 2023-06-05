@@ -18,6 +18,7 @@ class PostModel {
   late final String? createdAt;
   late final int? idUser;
   late final int? idCourse;
+  String? userName;
 
   PostModel.fromJson(Map<String, dynamic> json) {
     idPost = json['idPost'];

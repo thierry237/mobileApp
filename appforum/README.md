@@ -20,19 +20,8 @@ AppForum est une application mobile développée en Dart qui permet aux utilisat
 * Télecharger ou cloner le dossier appForum (Backend) de github en tapant : git clone https://github.com/thierry237/AppForum.git
 * Assurez-vous d'avoir Dart et Flutter installés sur votre machine. Vous pouvez les télécharger et les installer à partir du site officiel de Flutter https://docs.flutter.dev/get-started/install
 ##
-
 * Accéder au repertoire du projet appForum(backend) et installer les dependances en éxecutant la commande *npm install*
     1. Démarrez le serveur API en éxecutant la commande node server.js
 
 * Accèder au repertoire du projet en dart et installer les dépendances en éxecutant la commande *flutter pub get*
-    1.Lancez l'application sur votre émulateur ou votre appareil connecté : flutter run
-
-## flutter et dart
-forum d'aide aux étudiants
-
-Conception d'un forum pour étudiants afin d'échanger au sujet sur les 
-différents cours présents.
-
-
-## Outils
-installer les outils necessaires (flutter) en suivant les instructions sur ce lien https://docs.flutter.dev/get-started/install
+    1. Lancez l'application sur votre émulateur ou votre appareil connecté : flutter run

@@ -44,12 +44,6 @@ class _AddPostPageState extends State<AddPostPage> {
       );
       return;
     }
-
-    print('save-post');
-    print(_post.title);
-    print(_post.message);
-    print(_post.idCourse);
-
     // Save the new course
     try {
       final postService = PostService();
@@ -77,7 +71,7 @@ class _AddPostPageState extends State<AddPostPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Failed to add new Post.'),
+          content: const Text('Impossible d\'ajouter le post.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

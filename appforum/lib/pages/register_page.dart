@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
             "Nom",
             (onValidateVal) {
               if (onValidateVal.isEmpty) {
-                return 'lastname can\'t be empty.';
+                return 'Ajouter un nom';
               }
 
               return null;
@@ -117,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
               "Prénom",
               (onValidateVal) {
                 if (onValidateVal.isEmpty) {
-                  return 'firstbame can\'t be empty.';
+                  return 'Ajouter un prénom';
                 }
 
                 return null;
@@ -142,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
               "Nom d'utilisateur",
               (onValidateVal) {
                 if (onValidateVal.isEmpty) {
-                  return 'username can\'t be empty.';
+                  return 'Ajouter un nom d\'utilisateur ';
                 }
                 if (onValidateVal.length <= 3 || onValidateVal.length >= 14) {
                   return 'minimum 3 à 13 caractères requis ';

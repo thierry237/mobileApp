@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
             "Adresse email",
             (onValidateVal) {
               if (onValidateVal.isEmpty) {
-                return 'email can\'t be empty.';
+                return 'Ajouter un email';
               }
 
               return null;
@@ -111,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
             child: FormHelper.inputFieldWidget(
                 context, "password", "mot de passe", (onValidateVal) {
               if (onValidateVal.isEmpty) {
-                return 'password can\'t be empty.';
+                return 'Ajouter un password';
               }
 
               return null;
@@ -183,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
                       FormHelper.showSimpleAlertDialog(
                         context,
                         Config.appName,
-                        "Invalid email/password",
+                        "Mot de passe/email invalide",
                         "OK",
                         () {
                           Navigator.pop(context);

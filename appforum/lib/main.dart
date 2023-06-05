@@ -5,6 +5,7 @@ import 'package:appforum/pages/edit_post_page.dart';
 import 'package:appforum/pages/home_page.dart';
 import 'package:appforum/pages/list_comments_page.dart';
 import 'package:appforum/pages/list_posts_page.dart';
+import 'package:appforum/pages/search_course_page.dart';
 import 'package:appforum/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'pages/login_page.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         "/add-course": (context) => AddCoursePage(),
+        "/search-course": (context) => const SearchCoursePage(),
         "/edit-course": (context) => EditCoursePage(
               courseId: ModalRoute.of(context)?.settings.arguments as int,
             ),

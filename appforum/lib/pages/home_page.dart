@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
 
   final List<Widget> _children = [
-    CourseListPage(),
+    const CourseListPage(),
     const UserPage(),
   ];
 
@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              // Action à effectuer lorsque l'icône est cliquée
               // Ajoutez ici la navigation vers la page de modification de profil
             },
           ),
@@ -94,7 +93,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ListTile(
               title: const Text('Rechercher'),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, "/search-course");
+              },
             ),
             ListTile(
               title: const Text('Se déconnecter'),
@@ -207,8 +208,6 @@ class _CourseListPageState extends State<CourseListPage> {
                         ),
                         title: GestureDetector(
                           onTap: () {
-                            // Action à effectuer lors du clic sur le lien
-                            // Par exemple, naviguer vers une page détaillée du cours
                             Navigator.pushNamed(context, '/list-posts',
                                 arguments: course.idCourse);
                           },
@@ -348,7 +347,6 @@ class _UserPageState extends State<UserPage> {
             icon: const Icon(Icons.search),
             onPressed: () {
               // Action de recherche
-              // _performSearch();
             },
           ),
         ],
