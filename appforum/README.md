@@ -15,6 +15,9 @@ AppForum est une application mobile développée en Dart qui permet aux utilisat
 * Gestion des posts : les utilisateurs peuvent créer, mettre à jour et supprimer leurs posts pour des cours.
 * Gestion des commentaires: les utilisateurs peuvent créer, mettre à jour ou supprimer leurs commentaires pour un post.
 
+## modele relationnel
+![Getting Started](./modele_relationnel.png)
+
 # Installation et configuration du projet
 * Télecharger ou cloner le dossier appForum de github en tapant : git clone https://github.com/thierry237/mobileApp.git
 * Télecharger ou cloner le dossier appForum (Backend) de github en tapant : git clone https://github.com/thierry237/AppForum.git
