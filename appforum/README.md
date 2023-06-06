@@ -1,7 +1,7 @@
 # Projet Application mobile
 AppForum est une application mobile développée en Dart qui permet aux utilisateurs de participer à des forums de discussion. L'application utilise une API Node.js développée en JavaScript pour gérer les fonctionnalités backend.
 
-## Langage
+## Langages
 * Dart
 * JavaScript
 
@@ -15,7 +15,7 @@ AppForum est une application mobile développée en Dart qui permet aux utilisat
 * Gestion des posts : les utilisateurs peuvent créer, mettre à jour et supprimer leurs posts pour des cours.
 * Gestion des commentaires: les utilisateurs peuvent créer, mettre à jour ou supprimer leurs commentaires pour un post.
 
-## modele relationnel
+## modèle relationnel
 ![Getting Started](./modele_relationnel.png)
 
 # Installation et configuration du projet
