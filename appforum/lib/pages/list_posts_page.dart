@@ -300,7 +300,7 @@ class _ListPostsPageState extends State<ListPostsPage> {
                                   return AlertDialog(
                                     title: const Text('Confirmation'),
                                     content: const Text(
-                                        'Êtes-vous sûr de vouloir supprimer cette publication ?'),
+                                        'Êtes-vous sûr de vouloir supprimer ce post ?'),
                                     actions: [
                                       TextButton(
                                         child: const Text('Annuler'),

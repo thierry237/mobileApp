@@ -69,10 +69,11 @@ class _EditCoursePageState extends State<EditCoursePage> {
 
     if (courseExists) {
       // Show an error message indicating that the course already exists
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
+          title: const Text('Message'),
           content: const Text('Le cours existe déjà.'),
           actions: [
             TextButton(
@@ -90,10 +91,11 @@ class _EditCoursePageState extends State<EditCoursePage> {
       await courseService.editCourse(widget.courseId, _course);
 
       // Show a success dialog
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
+          title: const Text('Succès'),
           content: const Text('Cours modifié avec succès.'),
           actions: [
             TextButton(
@@ -105,11 +107,12 @@ class _EditCoursePageState extends State<EditCoursePage> {
       );
     } catch (e) {
       // Show an error message
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text('Failed to save course changes.'),
+          title: const Text('Message'),
+          content: const Text('Impossible de modifier le cours.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

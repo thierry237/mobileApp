@@ -74,8 +74,8 @@ class _EditPostPageState extends State<EditPostPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Post modifié'),
+          title: const Text('Succès'),
+          content: const Text('Post modifié avec succès.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/list-posts',
@@ -90,7 +90,7 @@ class _EditPostPageState extends State<EditPostPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
+          title: const Text('Message'),
           content: const Text('Impossible de modifier le post.'),
           actions: [
             TextButton(

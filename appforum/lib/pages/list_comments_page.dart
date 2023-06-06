@@ -102,7 +102,7 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
       await commentService.deleteComment(commentId);
       fetchComments();
     } catch (error) {
-      print('Failed to delete comment: $error');
+      print('Impossible de supprimer le commentaire: $error');
       // Gérer l'erreur de suppression de commentaire ici
     }
   }
@@ -130,7 +130,7 @@ class _ListCommentsPageState extends State<ListCommentsPage> {
         fetchComments();
       });
     } catch (error) {
-      print('Failed to edit comment: $error');
+      print('Erreur lors de la modification du commentaire: $error');
       // Gérer l'erreur de modification de commentaire ici
     }
   }

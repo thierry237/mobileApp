@@ -51,7 +51,8 @@ class MyApp extends StatelessWidget {
 }
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding
+      .ensureInitialized(); //garantie que les liaisons flutter sont initialisées
   bool result = await SharedService.isLoggedIn();
   if (result) {
     defaultHome = const HomePage();

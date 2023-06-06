@@ -62,7 +62,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
+          title: const Text('Succès'),
           content: const Text('Cours ajouté avec succès.'),
           actions: [
             TextButton(
@@ -77,7 +77,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
+          title: const Text('Message'),
           content: const Text('Impossible d\'ajouter le cours'),
           actions: [
             TextButton(

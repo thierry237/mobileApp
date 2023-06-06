@@ -33,7 +33,7 @@ class _AddPostPageState extends State<AddPostPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Please fill in all the required fields.'),
+          content: const Text('Veuillez remplir tous les champs obligatoires.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -54,8 +54,8 @@ class _AddPostPageState extends State<AddPostPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('New post added successfully.'),
+          title: const Text('Succès'),
+          content: const Text('Post ajouté avec succès.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/list-posts',
@@ -70,7 +70,7 @@ class _AddPostPageState extends State<AddPostPage> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Error'),
+          title: const Text('Message'),
           content: const Text('Impossible d\'ajouter le post.'),
           actions: [
             TextButton(

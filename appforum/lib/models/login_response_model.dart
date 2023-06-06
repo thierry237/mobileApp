@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-LoginResponseModel loginResponseJson(String str) =>
-    LoginResponseModel.fromJson(json.decode(str));
+LoginResponseModel loginResponseJson(String str) => LoginResponseModel.fromJson(
+    json.decode(str)); //prend une chaine de caractère json
 
 class LoginResponseModel {
   LoginResponseModel({
